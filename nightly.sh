@@ -13,15 +13,19 @@ function apt_install() {
     ensure_root apt-get install -y --no-install-recommends "$@"
 }
 
-## 00 basic build tools
+## 00 change working directory
+if [ -d ~/hyprsource ]; then
+    rm -rf ~/hyprsource
+fi
+mkdir ~/hyprsource
+cd ~/hyprsource
+
+
+## 01 basic build tools
 ensure_root apt-get update
 apt_install \
     ca-certificates meson jq cmake-extras \
     clang git wget autoconf automake make
-
-## 01 change working directory
-mkdir ~/hyprsource
-cd ~/hyprsource
 
 ## 70 xorg-macros
 git clone https://gitlab.freedesktop.org/xorg/util/macros.git
@@ -51,7 +55,7 @@ cd ~/hyprsource
 #cmake --build ./build -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
 #sudo cmake --install ./build
 
-# 94 hyprlang
+# 92 hyprlang
 git clone https://github.com/hyprwm/hyprlang.git
 cd ./hyprlang
     cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
@@ -59,7 +63,7 @@ cd ./hyprlang
     ensure_root cmake --install ./build
 cd ~/hyprsource
 
-# 95 hyprcursor
+# 93 hyprcursor
 git clone https://github.com/hyprwm/hyprcursor.git
 cd ./hyprcursor
     apt_install libzip-dev librsvg2-dev libtomlplusplus-dev
