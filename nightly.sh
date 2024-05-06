@@ -32,17 +32,17 @@ cd ./macros
 cd ~/hyprsource
 
 ## 71 libxcb-errors
-git clone https://gitlab.freedesktop.org/xorg/lib/libxcb-errors.git
-cd ./libxcb-errors
-    git submodule update --init
-    apt_install libtool xcb-proto
-    export ACLOCAL_PATH=/usr/local/share/aclocal
-    cp /usr/share/libtool/build-aux/ltmain.sh ./
-    ./autogen.sh
-    ./configure
-    make
-    ensure_root make install
-cd ~/hyprsource
+#git clone https://gitlab.freedesktop.org/xorg/lib/libxcb-errors.git
+#cd ./libxcb-errors
+#    git submodule update --init
+#    apt_install libtool xcb-proto
+#    export ACLOCAL_PATH=/usr/local/share/aclocal
+#    cp /usr/share/libtool/build-aux/ltmain.sh ./
+#    ./autogen.sh
+#    ./configure
+#    make
+#    ensure_root make install
+#cd ~/hyprsource
 
 ## 90 execinfo
 ## 91 epoll-shim
