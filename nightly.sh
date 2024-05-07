@@ -72,6 +72,14 @@ cd ./hyprcursor
     ensure_root cmake --install ./build
 cd ~/hyprsource
 
+# 95 wayland
+git clone https://gitlab.freedesktop.org/wayland/wayland.git
+cd ./wayland
+    mkdir ./build && cd ./build
+    meson setup --prefix=/usr --buildtype=release -Ddocumentation=false
+    ninja
+    ensure_root ninja install
+
 # 96 wayland-protocols
 git clone https://gitlab.freedesktop.org/wayland/wayland-protocols.git
 cd ./wayland-protocols
