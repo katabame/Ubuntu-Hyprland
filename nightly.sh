@@ -113,7 +113,7 @@ cd ~/hyprsource
 # 95 xdg-desktop-portal-hyprland
 git clone --recurse-submodules https://github.com/hyprwm/xdg-desktop-portal-hyprland.git
 cd ./xdg-desktop-portal-hyprland
-    apt_install libpipewire-0.3-dev libsdbus-c++-dev qt6-base-dev 
+    apt_install libpipewire-0.3-dev libsdbus-c++-dev qt6-base-dev libdrm-dev libgbm-dev
     cmake -DCMAKE_INSTALL_LIBEXECDIR:PATH=/usr/lib -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
     cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
     ensure_root cmake --install ./build
