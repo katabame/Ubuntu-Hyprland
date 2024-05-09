@@ -25,7 +25,7 @@ cd ~/hyprsource
 ensure_root apt-get update
 apt_install \
     ca-certificates meson jq cmake-extras \
-    clang git wget autoconf automake make
+    git wget automake build-essential
 
 ## 70 xorg-macros
 git clone https://gitlab.freedesktop.org/xorg/util/macros.git
@@ -48,14 +48,14 @@ cd ~/hyprsource
 #    ensure_root make install
 #cd ~/hyprsource
 
-## 90 execinfo
-## 91 epoll-shim
+## 80 execinfo
+## 81 epoll-shim
 #git clone https://github.com/jiixyj/epoll-shim.git
 #cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
 #cmake --build ./build -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
 #sudo cmake --install ./build
 
-# 92 hyprlang
+# 90 hyprlang
 git clone https://github.com/hyprwm/hyprlang.git
 cd ./hyprlang
     cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
@@ -63,7 +63,7 @@ cd ./hyprlang
     ensure_root cmake --install ./build
 cd ~/hyprsource
 
-# 93 hyprcursor
+# 91 hyprcursor
 git clone https://github.com/hyprwm/hyprcursor.git
 cd ./hyprcursor
     apt_install libzip-dev librsvg2-dev libtomlplusplus-dev
@@ -72,7 +72,7 @@ cd ./hyprcursor
     ensure_root cmake --install ./build
 cd ~/hyprsource
 
-# 95 wayland
+# 92 wayland
 git clone https://gitlab.freedesktop.org/wayland/wayland.git
 cd ./wayland
     mkdir ./build && cd ./build
@@ -80,7 +80,7 @@ cd ./wayland
     ninja
     ensure_root ninja install
 
-# 96 wayland-protocols
+# 93 wayland-protocols
 git clone https://gitlab.freedesktop.org/wayland/wayland-protocols.git
 cd ./wayland-protocols
     mkdir ./build && cd ./build
@@ -89,7 +89,7 @@ cd ./wayland-protocols
     ensure_root ninja install
 cd ~/hyprsource
 
-# 97 hyprland-protocols
+# 94 hyprland-protocols
 git clone https://github.com/hyprwm/hyprland-protocols.git
 cd ./hyprland-protocols
     mkdir ./build && cd ./build
@@ -97,7 +97,16 @@ cd ./hyprland-protocols
     ensure_root ninja install
 cd ~/hyprsource
 
-# 98 hyprwayland-scanner
+# 95 xdg-desktop-portal-hyprland
+git clone --recurse-submodules https://github.com/hyprwm/xdg-desktop-portal-hyprland.git
+cd ./xdg-desktop-portal-hyprland
+    apt_install libpipewire-0.3-dev libsdbus-c++-dev qt6-base-dev 
+    cmake -DCMAKE_INSTALL_LIBEXECDIR:PATH=/usr/lib -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+    cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
+    ensure_root cmake --install ./build
+cd ~/hyprsource
+
+# 96 hyprwayland-scanner
 git clone https://github.com/hyprwm/hyprwayland-scanner.git
 cd ./hyprwayland-scanner
     apt_install libpugixml-dev
@@ -106,8 +115,19 @@ cd ./hyprwayland-scanner
     ensure_root cmake --install ./build
 cd ~/hyprsource
 
+# 98 additonal dependencies
+# cf. https://gist.github.com/Vertecedoc4545/6e54487f07a1888b656b656c0cdd9764
+# cf. https://gist.github.com/katabame/e368988c968278c83c19bd5f5b60f407
+# those should be sorted
+apt_install \
+    gettext gettext-base fontconfig libfontconfig-dev libxml2-dev \
+    libxkbcommon-x11-dev libxkbregistry-dev seatd libvulkan-dev \
+    libvulkan-volk-dev libvkfft-dev libgulkan-dev libegl1-mesa-dev \
+    glslang-tools libinput-bin libavutil-dev libavcodec-dev \
+    libavformat-dev vulkan-utility-libraries-dev
+
 # 99 Hyprland
-git clone https://github.com/hyprwm/hyprland.git
+git clone --recurse-submodules https://github.com/hyprwm/hyprland.git
 cd ./hyprland
     sed -i 's/\/usr\/local/\/usr/g' Makefile
     apt_install \
