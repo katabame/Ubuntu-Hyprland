@@ -27,6 +27,17 @@ apt_install \
     ca-certificates meson jq cmake-extras \
     git wget automake build-essential
 
+# 02 additonal dependencies
+# cf. https://gist.github.com/Vertecedoc4545/6e54487f07a1888b656b656c0cdd9764
+# cf. https://gist.github.com/katabame/e368988c968278c83c19bd5f5b60f407
+# those should be sorted (which package required by what)
+apt_install \
+    gettext gettext-base fontconfig libfontconfig-dev \
+    libxkbcommon-x11-dev libxkbregistry-dev seatd libvulkan-dev \
+    libvulkan-volk-dev libvkfft-dev libgulkan-dev libegl1-mesa-dev \
+    glslang-tools libinput-bin libavutil-dev libavcodec-dev \
+    libavformat-dev vulkan-utility-libraries-dev
+
 ## 70 xorg-macros
 git clone https://gitlab.freedesktop.org/xorg/util/macros.git
 cd ./macros
@@ -75,10 +86,12 @@ cd ~/hyprsource
 # 92 wayland
 git clone https://gitlab.freedesktop.org/wayland/wayland.git
 cd ./wayland
+    apt_install libxml2-dev
     mkdir ./build && cd ./build
     meson setup --prefix=/usr --buildtype=release -Ddocumentation=false
     ninja
     ensure_root ninja install
+cd ~/hyprsource
 
 # 93 wayland-protocols
 git clone https://gitlab.freedesktop.org/wayland/wayland-protocols.git
@@ -114,17 +127,6 @@ cd ./hyprwayland-scanner
     cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
     ensure_root cmake --install ./build
 cd ~/hyprsource
-
-# 98 additonal dependencies
-# cf. https://gist.github.com/Vertecedoc4545/6e54487f07a1888b656b656c0cdd9764
-# cf. https://gist.github.com/katabame/e368988c968278c83c19bd5f5b60f407
-# those should be sorted
-apt_install \
-    gettext gettext-base fontconfig libfontconfig-dev libxml2-dev \
-    libxkbcommon-x11-dev libxkbregistry-dev seatd libvulkan-dev \
-    libvulkan-volk-dev libvkfft-dev libgulkan-dev libegl1-mesa-dev \
-    glslang-tools libinput-bin libavutil-dev libavcodec-dev \
-    libavformat-dev vulkan-utility-libraries-dev
 
 # 99 Hyprland
 git clone --recurse-submodules https://github.com/hyprwm/hyprland.git
