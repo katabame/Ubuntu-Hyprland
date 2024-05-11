@@ -1,0 +1,31 @@
+name: Nightly Build
+
+on:
+  schedule:
+    - cron: '0 15 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - nightly.sh
+
+jobs:
+
+  nightly-job:
+    runs-on: ubuntu-24.04
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build Hyprland
+      run: |
+        chmod +x nightly.sh
+        ./nightly.sh
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: nightly-artifacts-$(date +'%Y-%m-%d-%H-%M-%S')
+        path: hyprsource/artifact/
