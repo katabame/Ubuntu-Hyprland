@@ -1,3 +1,4 @@
 hyprsource/
+!hyprsource/artifact/
 .wget-hsts
 .bash_history
