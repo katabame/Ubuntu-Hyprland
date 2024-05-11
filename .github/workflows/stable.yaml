@@ -10,7 +10,7 @@ on:
 
 jobs:
 
-  nightly-job:
+  stable:
     runs-on: ubuntu-24.04
 
     steps:
