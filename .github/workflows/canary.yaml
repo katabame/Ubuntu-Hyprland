@@ -21,13 +21,11 @@ jobs:
 
     - name: Run build script
       run: |
-        echo "::group::Ensure script is executable"
         chmod +x ./build.sh
-        echo "::endgroup::"
         ./build.sh canary
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: canary-artifacts-$(date +'%Y-%m-%d-%H-%M-%S')
-        path: hyprsource/artifact/
+        name: canary-artifacts
+        path: ~/hyprsource/artifact/
