@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - build.sh
+      - .github/workflows/canary.yaml
 
 jobs:
 
