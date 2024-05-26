@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - stable.sh
+      - build.sh
 
 jobs:
 
@@ -19,8 +19,10 @@ jobs:
 
     - name: Run build script
       run: |
-        chmod +x stable.sh
-        ./stable.sh
+        echo "::group::Ensure script is executable"
+        chmod +x ./build.sh
+        echo "::endgroup::"
+        ./build.sh stable
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4

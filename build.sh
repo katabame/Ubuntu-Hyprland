@@ -1,21 +1,6 @@
 #!/usr/bin/bash
 set -e
 
-# Build successful versions as of 2024-05-11 02:00 PM GMT+9
-XORG_MACROS_TAG='util-macros-1.20.1'     # 2024-04-17 05:06 AM GMT+9
-WAYLAND_TAG='1.22.92'                    # 2024-05-09 11:53 PM GMT+9
-#WAYLAND_TAG='1.22.91'                    # 2024-04-26 12:49:08 AM GMT+9
-WAYLAND_PROTOCOLS_TAG='1.36'             # 2024-04-26 08:41 PM GMT+9
-HYPRLANG_TAG='v0.5.1'                    # 2024-04-15 04:04 AM GMT+9
-HYPRCURSOR_TAG='v0.1.8'                  # 2024-04-26 05:38 AM GMT+9
-HYPRLAND_PROTOCOLS_TAG='v0.2'            # 2023-04-27 05:32 AM GMT+9
-XDG_DESKTOP_PORTAL_HYPRLAND_TAG='v1.3.1' # 2024-01-06 12:01 AM GMT+9
-#HYPRWAYLAND_SCANNER_TAG='v0.3.7'         # 2024-05-11 07:50 AM GMT+9
-#HYPRWAYLAND_SCANNER_TAG='v0.3.6'         # 2024-05-10 05:45 AM GMT+9
-#HYPRWAYLAND_SCANNER_TAG='v0.3.5'         # 2024-05-07 11:11 PM GMT+9
-HYPRWAYLAND_SCANNER_TAG='v0.3.4'         # 2024-05-04 02:01 AM GMT+9
-HYPRLAND_TAG='v0.40.0'                   # 2024-05-05 12:56 AM GMT+9
-
 ## -- TRAP!!
 codename=$(grep ^UBUNTU_CODENAME /etc/os-release | cut -d '=' -f2)
 if [ "${codename}" != 'noble' ]; then
@@ -50,10 +35,10 @@ echo "::group::Install basic dependencies"
 ensure_root apt-get update
 apt_install \
     ca-certificates meson jq cmake-extras \
-    git wget automake build-essential
+    git wget automake build-essential curl
 echo "::endgroup::"
 
-# 02 additonal dependencies
+# 02 additional dependencies
 # cf. https://gist.github.com/Vertecedoc4545/6e54487f07a1888b656b656c0cdd9764
 # cf. https://gist.github.com/katabame/e368988c968278c83c19bd5f5b60f407
 # those should be sorted (which package required by what)
@@ -66,9 +51,50 @@ apt_install \
     libavformat-dev vulkan-utility-libraries-dev
 echo "::endgroup::"
 
+# 03 determine repository tag
+case "$1" in
+    nightly)
+        echo "Build target: nightly"
+        XORG_MACROS_TAG='master'
+        WAYLAND_TAG='main'
+        WAYLAND_PROTOCOLS_TAG='main'
+        HYPRLANG_TAG='main'
+        HYPRCURSOR_TAG='main'
+        HYPRLAND_PROTOCOLS_TAG='main'
+        XDG_DESKTOP_PORTAL_HYPRLAND_TAG='master'
+        HYPRWAYLAND_SCANNER_TAG='main'
+        HYPRLAND_TAG='main'
+    ;;
+    canary)
+        echo "Build target: canary"
+        XORG_MACROS_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/798/repository/tags | jq -r '.[0].name'`
+        WAYLAND_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/121/repository/tags | jq -r '.[0].name'`
+        WAYLAND_PROTOCOLS_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/2891/repository/tags | jq -r '.[0].name'`
+        HYPRLANG_TAG=`curl https://api.github.com/repos/hyprwm/hyprlang/releases/latest | jq -r '.tag_name'`
+        HYPRCURSOR_TAG=`curl https://api.github.com/repos/hyprwm/hyprcursor/releases/latest | jq -r '.tag_name'`
+        HYPRLAND_PROTOCOLS_TAG=`curl https://api.github.com/repos/hyprwm/hyprland-protocols/releases/latest | jq -r '.tag_name'`
+        XDG_DESKTOP_PORTAL_HYPRLAND_TAG=`curl https://api.github.com/repos/hyprwm/xdg-desktop-portal-hyprland/releases/latest | jq -r '.tag_name'`
+        HYPRWAYLAND_SCANNER_TAG=`curl https://api.github.com/repos/hyprwm/hyprwayland-scanner/releases/latest | jq -r '.tag_name'`
+        HYPRLAND_TAG=`curl https://api.github.com/repos/hyprwm/hyprland/releases/latest | jq -r '.tag_name'`
+    ;;
+    *)
+        echo "Build target: stable"
+        # Build successful versions as of 2024-05-11 02:00 PM GMT+9
+        XORG_MACROS_TAG='util-macros-1.20.1'     # 2024-04-17 05:06 AM GMT+9
+        WAYLAND_TAG='1.22.92'                    # 2024-05-09 11:53 PM GMT+9
+        WAYLAND_PROTOCOLS_TAG='1.36'             # 2024-04-26 08:41 PM GMT+9
+        HYPRLANG_TAG='v0.5.1'                    # 2024-04-15 04:04 AM GMT+9
+        HYPRCURSOR_TAG='v0.1.8'                  # 2024-04-26 05:38 AM GMT+9
+        HYPRLAND_PROTOCOLS_TAG='v0.2'            # 2023-04-27 05:32 AM GMT+9
+        XDG_DESKTOP_PORTAL_HYPRLAND_TAG='v1.3.1' # 2024-01-06 12:01 AM GMT+9
+        HYPRWAYLAND_SCANNER_TAG='v0.3.4'         # 2024-05-04 02:01 AM GMT+9
+        HYPRLAND_TAG='v0.40.0'                   # 2024-05-05 12:56 AM GMT+9
+    ;;
+esac
+
 ## 70 xorg-macros
 echo "::group::Build xorg-macros"
-git clone --depth 1 -b ${XORG_MACROS_TAG} https://gitlab.freedesktop.org/xorg/util/macros.git
+git clone --depth 1 --branch ${XORG_MACROS_TAG} https://gitlab.freedesktop.org/xorg/util/macros.git
 cd ./macros
     ./autogen.sh
     ./configure
@@ -76,29 +102,9 @@ cd ./macros
 cd ~/hyprsource
 echo "::endgroup::"
 
-## 71 libxcb-errors
-#git clone https://gitlab.freedesktop.org/xorg/lib/libxcb-errors.git
-#cd ./libxcb-errors
-#    git submodule update --init
-#    apt_install libtool xcb-proto
-#    export ACLOCAL_PATH=/usr/local/share/aclocal
-#    cp /usr/share/libtool/build-aux/ltmain.sh ./
-#    ./autogen.sh
-#    ./configure
-#    make
-#    ensure_root make install
-#cd ~/hyprsource
-
-## 80 execinfo
-## 81 epoll-shim
-#git clone https://github.com/jiixyj/epoll-shim.git
-#cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
-#cmake --build ./build -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
-#sudo cmake --install ./build
-
 # 90 hyprlang
 echo "::group::Build hyprlang"
-git clone --depth 1 -b ${HYPRLANG_TAG} https://github.com/hyprwm/hyprlang.git
+git clone --depth 1 --branch ${HYPRLANG_TAG} https://github.com/hyprwm/hyprlang.git
 cd ./hyprlang
     cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
     cmake --build ./build --config Release --target hyprlang -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
@@ -108,7 +114,7 @@ echo "::endgroup::"
 
 # 91 hyprcursor
 echo "::group::Build hyprcursor"
-git clone --depth 1 -b ${HYPRCURSOR_TAG} https://github.com/hyprwm/hyprcursor.git
+git clone --depth 1 --branch ${HYPRCURSOR_TAG} https://github.com/hyprwm/hyprcursor.git
 cd ./hyprcursor
     apt_install libzip-dev librsvg2-dev libtomlplusplus-dev
     cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
@@ -119,7 +125,7 @@ echo "::endgroup::"
 
 # 92 wayland
 echo "::group::Build wayland"
-git clone --depth 1 -b ${WAYLAND_TAG} https://gitlab.freedesktop.org/wayland/wayland.git
+git clone --depth 1 --branch ${WAYLAND_TAG} https://gitlab.freedesktop.org/wayland/wayland.git
 cd ./wayland
     apt_install libxml2-dev
     mkdir ./build && cd ./build
@@ -131,7 +137,7 @@ echo "::endgroup::"
 
 # 93 wayland-protocols
 echo "::group::Build wayland-protocols"
-git clone --depth 1 -b ${WAYLAND_PROTOCOLS_TAG} https://gitlab.freedesktop.org/wayland/wayland-protocols.git
+git clone --depth 1 --branch ${WAYLAND_PROTOCOLS_TAG} https://gitlab.freedesktop.org/wayland/wayland-protocols.git
 cd ./wayland-protocols
     mkdir ./build && cd ./build
     meson setup --prefix=/usr --buildtype=release
@@ -142,7 +148,7 @@ echo "::endgroup::"
 
 # 94 hyprland-protocols
 echo "::group::Build hyprland-protocols"
-git clone --depth 1 -b ${HYPRLAND_PROTOCOLS_TAG} https://github.com/hyprwm/hyprland-protocols.git
+git clone --depth 1 --branch ${HYPRLAND_PROTOCOLS_TAG} https://github.com/hyprwm/hyprland-protocols.git
 cd ./hyprland-protocols
     mkdir ./build && cd ./build
     meson setup --prefix=/usr --buildtype=release
@@ -152,7 +158,7 @@ echo "::endgroup::"
 
 # 95 xdg-desktop-portal-hyprland
 echo "::group::Build xdg-desktop-portal-hyprland"
-git clone --depth 1 -b ${XDG_DESKTOP_PORTAL_HYPRLAND_TAG} --recurse-submodules https://github.com/hyprwm/xdg-desktop-portal-hyprland.git
+git clone --depth 1 --branch ${XDG_DESKTOP_PORTAL_HYPRLAND_TAG} --recurse-submodules https://github.com/hyprwm/xdg-desktop-portal-hyprland.git
 cd ./xdg-desktop-portal-hyprland
     apt_install libpipewire-0.3-dev libsdbus-c++-dev qt6-base-dev libdrm-dev libgbm-dev
     mkdir ./build && cd ./build
@@ -164,7 +170,7 @@ echo "::endgroup::"
 
 # 96 hyprwayland-scanner
 echo "::group::Build hyprwayland-scanner"
-git clone --depth 1 -b ${HYPRWAYLAND_SCANNER_TAG} https://github.com/hyprwm/hyprwayland-scanner.git
+git clone --depth 1 --branch ${HYPRWAYLAND_SCANNER_TAG} https://github.com/hyprwm/hyprwayland-scanner.git
 cd ./hyprwayland-scanner
     apt_install libpugixml-dev
     cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
@@ -175,7 +181,7 @@ echo "::endgroup::"
 
 # 99 Hyprland
 echo "::group::Build hyprland"
-git clone --depth 1 -b ${HYPRLAND_TAG} --recurse-submodules https://github.com/hyprwm/hyprland.git
+git clone --depth 1 --branch ${HYPRLAND_TAG} --recurse-submodules https://github.com/hyprwm/hyprland.git
 cd ./hyprland
     sed -i 's/\/usr\/local/\/usr/g' Makefile
     apt_install \
