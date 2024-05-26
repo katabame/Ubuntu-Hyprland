@@ -19,13 +19,11 @@ jobs:
 
     - name: Run build script
       run: |
-        echo "::group::Ensure script is executable"
         chmod +x ./build.sh
-        echo "::endgroup::"
         ./build.sh stable
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: stable-artifacts-$(date +'%Y-%m-%d-%H-%M-%S')
-        path: hyprsource/artifact/
+        path: hyprsource/artifact/*
