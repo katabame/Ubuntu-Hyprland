@@ -55,7 +55,6 @@ echo "::endgroup::"
 case "$1" in
     nightly)
         echo "Build target: nightly"
-        XORG_MACROS_TAG='master'
         WAYLAND_TAG='main'
         WAYLAND_PROTOCOLS_TAG='main'
         HYPRLANG_TAG='main'
@@ -64,45 +63,61 @@ case "$1" in
         XDG_DESKTOP_PORTAL_HYPRLAND_TAG='master'
         HYPRWAYLAND_SCANNER_TAG='main'
         HYPRLAND_TAG='main'
+        HYPRUTILS_TAG='main'
+        XCB_ERRORS_TAG='master'
     ;;
     canary)
         echo "Build target: canary"
-        XORG_MACROS_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/798/repository/tags | jq -r '.[0].name'`
         WAYLAND_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/121/repository/tags | jq -r '.[0].name'`
         WAYLAND_PROTOCOLS_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/2891/repository/tags | jq -r '.[0].name'`
         HYPRLANG_TAG=`curl https://api.github.com/repos/hyprwm/hyprlang/releases/latest | jq -r '.tag_name'`
         HYPRCURSOR_TAG=`curl https://api.github.com/repos/hyprwm/hyprcursor/releases/latest | jq -r '.tag_name'`
-        HYPRLAND_PROTOCOLS_TAG=`curl https://api.github.com/repos/hyprwm/hyprland-protocols/releases/latest | jq -r '.tag_name'`
+        #HYPRLAND_PROTOCOLS_TAG=`curl https://api.github.com/repos/hyprwm/hyprland-protocols/releases/latest | jq -r '.tag_name'`
+        HYPRLAND_PROTOCOLS_TAG='main'
         XDG_DESKTOP_PORTAL_HYPRLAND_TAG=`curl https://api.github.com/repos/hyprwm/xdg-desktop-portal-hyprland/releases/latest | jq -r '.tag_name'`
         HYPRWAYLAND_SCANNER_TAG=`curl https://api.github.com/repos/hyprwm/hyprwayland-scanner/releases/latest | jq -r '.tag_name'`
         HYPRLAND_TAG=`curl https://api.github.com/repos/hyprwm/hyprland/releases/latest | jq -r '.tag_name'`
+        HYPRUTILS_TAG=`curl https://api.github.com/repos/hyprwm/hyprutils/releases/latest | jq -r '.tag_name'`
+        XCB_ERRORS_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/2433/repository/tags | jq -r '.[0].name'`
     ;;
     *)
         echo "Build target: stable"
-        # Build successful versions as of 2024-05-11 02:00 PM GMT+9
-        XORG_MACROS_TAG='util-macros-1.20.1'     # 2024-04-17 05:06 AM GMT+9
-        WAYLAND_TAG='1.22.92'                    # 2024-05-09 11:53 PM GMT+9
-        WAYLAND_PROTOCOLS_TAG='1.36'             # 2024-04-26 08:41 PM GMT+9
-        HYPRLANG_TAG='v0.5.1'                    # 2024-04-15 04:04 AM GMT+9
-        HYPRCURSOR_TAG='v0.1.8'                  # 2024-04-26 05:38 AM GMT+9
-        HYPRLAND_PROTOCOLS_TAG='v0.2'            # 2023-04-27 05:32 AM GMT+9
-        XDG_DESKTOP_PORTAL_HYPRLAND_TAG='v1.3.1' # 2024-01-06 12:01 AM GMT+9
-        HYPRWAYLAND_SCANNER_TAG='v0.3.4'         # 2024-05-04 02:01 AM GMT+9
-        HYPRLAND_TAG='v0.40.0'                   # 2024-05-05 12:56 AM GMT+9
+        # Build successful versions as of 2024-06-11 02:00 AM GMT+9
+        WAYLAND_TAG='1.23.0'
+        WAYLAND_PROTOCOLS_TAG='1.36'
+        HYPRLANG_TAG='v0.5.2'
+        HYPRCURSOR_TAG='v0.1.9'
+        HYPRLAND_PROTOCOLS_TAG='main'
+        XDG_DESKTOP_PORTAL_HYPRLAND_TAG='v1.3.1'
+        HYPRWAYLAND_SCANNER_TAG='v0.3.10'
+        HYPRLAND_TAG='v0.41.0'
+        HYPRUTILS_TAG='v0.1.1'
+        XCB_ERRORS_TAG='xcb-util-errors-1.0.1'
     ;;
 esac
 
-## 70 xorg-macros
-echo "::group::Build xorg-macros"
-git clone --depth 1 --branch ${XORG_MACROS_TAG} https://gitlab.freedesktop.org/xorg/util/macros.git
-cd ./macros
+# 70 libxcb-errors
+echo "::group::Build libxcb-errors"
+git clone --depth 1 --branch ${XCB_ERRORS_TAG} --recurse-submodules https://gitlab.freedesktop.org/xorg/lib/libxcb-errors.git
+cd ./libxcb-errors
+    apt_install xutils-dev libtool xcb-proto
     ./autogen.sh
     ./configure
     ensure_root make install
 cd ~/hyprsource
 echo "::endgroup::"
 
-# 90 hyprlang
+# 90 hyprutils
+echo "::group::Build hyprutils"
+git clone --depth 1 --branch ${HYPRUTILS_TAG} https://github.com/hyprwm/hyprutils.git
+cd ./hyprutils
+    cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+    cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
+    ensure_root cmake --install ./build
+cd ~/hyprsource
+echo "::endgroup::"
+
+# 91 hyprlang
 echo "::group::Build hyprlang"
 git clone --depth 1 --branch ${HYPRLANG_TAG} https://github.com/hyprwm/hyprlang.git
 cd ./hyprlang
@@ -112,7 +127,7 @@ cd ./hyprlang
 cd ~/hyprsource
 echo "::endgroup::"
 
-# 91 hyprcursor
+# 92 hyprcursor
 echo "::group::Build hyprcursor"
 git clone --depth 1 --branch ${HYPRCURSOR_TAG} https://github.com/hyprwm/hyprcursor.git
 cd ./hyprcursor
@@ -123,7 +138,7 @@ cd ./hyprcursor
 cd ~/hyprsource
 echo "::endgroup::"
 
-# 92 wayland
+# 93 wayland
 echo "::group::Build wayland"
 git clone --depth 1 --branch ${WAYLAND_TAG} https://gitlab.freedesktop.org/wayland/wayland.git
 cd ./wayland
@@ -135,7 +150,7 @@ cd ./wayland
 cd ~/hyprsource
 echo "::endgroup::"
 
-# 93 wayland-protocols
+# 94 wayland-protocols
 echo "::group::Build wayland-protocols"
 git clone --depth 1 --branch ${WAYLAND_PROTOCOLS_TAG} https://gitlab.freedesktop.org/wayland/wayland-protocols.git
 cd ./wayland-protocols
@@ -146,7 +161,7 @@ cd ./wayland-protocols
 cd ~/hyprsource
 echo "::endgroup::"
 
-# 94 hyprland-protocols
+# 95 hyprland-protocols
 echo "::group::Build hyprland-protocols"
 git clone --depth 1 --branch ${HYPRLAND_PROTOCOLS_TAG} https://github.com/hyprwm/hyprland-protocols.git
 cd ./hyprland-protocols
@@ -156,7 +171,7 @@ cd ./hyprland-protocols
 cd ~/hyprsource
 echo "::endgroup::"
 
-# 95 xdg-desktop-portal-hyprland
+# 96 xdg-desktop-portal-hyprland
 echo "::group::Build xdg-desktop-portal-hyprland"
 git clone --depth 1 --branch ${XDG_DESKTOP_PORTAL_HYPRLAND_TAG} --recurse-submodules https://github.com/hyprwm/xdg-desktop-portal-hyprland.git
 cd ./xdg-desktop-portal-hyprland
@@ -168,7 +183,7 @@ cd ./xdg-desktop-portal-hyprland
 cd ~/hyprsource
 echo "::endgroup::"
 
-# 96 hyprwayland-scanner
+# 97 hyprwayland-scanner
 echo "::group::Build hyprwayland-scanner"
 git clone --depth 1 --branch ${HYPRWAYLAND_SCANNER_TAG} https://github.com/hyprwm/hyprwayland-scanner.git
 cd ./hyprwayland-scanner
