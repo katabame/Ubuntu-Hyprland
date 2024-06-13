@@ -82,16 +82,16 @@ case "$1" in
     ;;
     *)
         echo "Build target: stable"
-        # Build successful versions as of 2024-06-11 02:00 AM GMT+9
+        # Build successful versions as of 2024-06-14 02:00 AM GMT+9
         WAYLAND_TAG='1.23.0'
         WAYLAND_PROTOCOLS_TAG='1.36'
         HYPRLANG_TAG='v0.5.2'
         HYPRCURSOR_TAG='v0.1.9'
         HYPRLAND_PROTOCOLS_TAG='main'
-        XDG_DESKTOP_PORTAL_HYPRLAND_TAG='v1.3.1'
+        XDG_DESKTOP_PORTAL_HYPRLAND_TAG='v1.3.2'
         HYPRWAYLAND_SCANNER_TAG='v0.3.10'
-        HYPRLAND_TAG='v0.41.0'
-        HYPRUTILS_TAG='v0.1.1'
+        HYPRLAND_TAG='v0.41.1'
+        HYPRUTILS_TAG='v0.1.2'
         XCB_ERRORS_TAG='xcb-util-errors-1.0.1'
     ;;
 esac
@@ -175,11 +175,10 @@ echo "::endgroup::"
 echo "::group::Build xdg-desktop-portal-hyprland"
 git clone --depth 1 --branch ${XDG_DESKTOP_PORTAL_HYPRLAND_TAG} --recurse-submodules https://github.com/hyprwm/xdg-desktop-portal-hyprland.git
 cd ./xdg-desktop-portal-hyprland
-    apt_install libpipewire-0.3-dev libsdbus-c++-dev qt6-base-dev libdrm-dev libgbm-dev
-    mkdir ./build && cd ./build
-    meson setup --libexecdir /usr/libexec --prefix /usr --buildtype=release
-    ninja
-    ensure_root ninja install
+    apt_install libpipewire-0.3-dev libsdbus-c++-dev qt6-base-dev libdrm-dev libgbm-dev qt6-tools-dev
+    cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_LIBEXECDIR:PATH=/usr/lib -S . -B ./build
+    cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
+    ensure_root cmake --install ./build
 cd ~/hyprsource
 echo "::endgroup::"
 
