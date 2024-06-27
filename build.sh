@@ -98,7 +98,7 @@ echo "### 📦 Build details" >> $GITHUB_STEP_SUMMARY
 echo "|Repository|Tag|" >> $GITHUB_STEP_SUMMARY
 echo "|----------|---|" >> $GITHUB_STEP_SUMMARY
 echo "|hyprwm/hyprcursor|[${HYPRCURSOR_TAG}](https://github.com/hyprwm/hyprcursor/tree/${HYPRCURSOR_TAG})|" >> $GITHUB_STEP_SUMMARY
-echo "|hyprwm/hyprland-protocols|[${HYPRLAND_PROTOCOLS_TAG}]|(https://github.com/hyprwm/hyprland-protocols/tree/${HYPRLAND_PROTOCOLS_TAG})|" >> $GITHUB_STEP_SUMMARY
+echo "|hyprwm/hyprland-protocols|[${HYPRLAND_PROTOCOLS_TAG}](https://github.com/hyprwm/hyprland-protocols/tree/${HYPRLAND_PROTOCOLS_TAG})|" >> $GITHUB_STEP_SUMMARY
 echo "|hyprwm/Hyprland|[${HYPRLAND_TAG}](https://github.com/hyprwm/Hyprland/tree/${HYPRLAND_TAG})|" >> $GITHUB_STEP_SUMMARY
 echo "|hyprwm/hyprlang|[${HYPRLANG_TAG}](https://github.com/hyprwm/hyprlang/tree/${HYPRLANG_TAG})|" >> $GITHUB_STEP_SUMMARY
 echo "|hyprwm/hyprutils|[${HYPRUTILS_TAG}](https://github.com/hyprwm/hyprutils/tree/${HYPRUTILS_TAG})|" >> $GITHUB_STEP_SUMMARY
