@@ -81,7 +81,7 @@ case "$1" in
     ;;
     *)
         echo "Build target: stable"
-        # Build successful versions as of 2024-06-14 02:00 AM GMT+9
+        # Build successful versions as of 2024-06-28 02:00 AM GMT+9
         HYPRCURSOR_TAG='v0.1.9'                  # https://github.com/hyprwm/hyprcursor/releases
         HYPRLAND_PROTOCOLS_TAG='v0.3.0'          # https://github.com/hyprwm/hyprland-protocols/releases
         HYPRLAND_TAG='v0.41.2'                   # https://github.com/hyprwm/Hyprland/releases
@@ -95,19 +95,18 @@ case "$1" in
     ;;
 esac
 echo "### 📦 Build details" >> $GITHUB_STEP_SUMMARY
-echo "|Repository|Tag / Branch (Commit)|" >> $GITHUB_STEP_SUMMARY
-echo "" >> $GITHUB_STEP_SUMMARY
-echo "|---------------|-----|" >> $GITHUB_STEP_SUMMARY
+echo "|Repository|Tag|" >> $GITHUB_STEP_SUMMARY
+echo "|----------|---|" >> $GITHUB_STEP_SUMMARY
 echo "|hyprwm/hyprcursor|[${HYPRCURSOR_TAG}](https://github.com/hyprwm/hyprcursor/tree/${HYPRCURSOR_TAG})|" >> $GITHUB_STEP_SUMMARY
-echo "|hyprwm/hyprland-protocols|[${HYPRLAND_PROTOCOLS_TAG}]|(https://github.com/hyprwm/hyprland-protocols/tree/${HYPRLAND_PROTOCOLS_TAG})|"
-echo "|hyprwm/Hyprland|[${HYPRLAND_TAG}](https://github.com/hyprwm/Hyprland/tree/${HYPRLAND_TAG})|"
-echo "|hyprwm/hyprlang|[${HYPRLANG_TAG}](https://github.com/hyprwm/hyprlang/tree/${HYPRLANG_TAG})|"
-echo "|hyprwm/hyprutils|[${HYPRUTILS_TAG}](https://github.com/hyprwm/hyprutils/tree/${HYPRUTILS_TAG})|"
-echo "|hyprwm/hyprwayland-scanner|[${HYPRWAYLAND_SCANNER_TAG}](https://github.com/hyprwm/hyprwayland-scanner/tree/${HYPRWAYLAND_SCANNER_TAG})|"
-echo "|hyprwm/xdg-desktop-portal-hyprland|[${XDG_DESKTOP_PORTAL_HYPRLAND_TAG}](https://github.com/hyprwm/xdg-desktop-portal-hyprland/tree/${XDG_DESKTOP_PORTAL_HYPRLAND_TAG})|"
-echo "|wayland/wayland-protocols|[1.36](https://gitlab.freedesktop.org/wayland/wayland-protocols/tree/1.36)|"
-echo "|wayland/wayland|[${WAYLAND_TAG}](https://gitlab.freedesktop.org/wayland/wayland/tree/${WAYLAND_TAG})|"
-echo "|xorg/lib/libxcb-errors|[${XCB_ERRORS_TAG}](https://gitlab.freedesktop.org/xorg/lib/libxcb-errors/-/tree/${XCB_ERRORS_TAG}?ref_type=tags)|"
+echo "|hyprwm/hyprland-protocols|[${HYPRLAND_PROTOCOLS_TAG}]|(https://github.com/hyprwm/hyprland-protocols/tree/${HYPRLAND_PROTOCOLS_TAG})|" >> $GITHUB_STEP_SUMMARY
+echo "|hyprwm/Hyprland|[${HYPRLAND_TAG}](https://github.com/hyprwm/Hyprland/tree/${HYPRLAND_TAG})|" >> $GITHUB_STEP_SUMMARY
+echo "|hyprwm/hyprlang|[${HYPRLANG_TAG}](https://github.com/hyprwm/hyprlang/tree/${HYPRLANG_TAG})|" >> $GITHUB_STEP_SUMMARY
+echo "|hyprwm/hyprutils|[${HYPRUTILS_TAG}](https://github.com/hyprwm/hyprutils/tree/${HYPRUTILS_TAG})|" >> $GITHUB_STEP_SUMMARY
+echo "|hyprwm/hyprwayland-scanner|[${HYPRWAYLAND_SCANNER_TAG}](https://github.com/hyprwm/hyprwayland-scanner/tree/${HYPRWAYLAND_SCANNER_TAG})|" >> $GITHUB_STEP_SUMMARY
+echo "|hyprwm/xdg-desktop-portal-hyprland|[${XDG_DESKTOP_PORTAL_HYPRLAND_TAG}](https://github.com/hyprwm/xdg-desktop-portal-hyprland/tree/${XDG_DESKTOP_PORTAL_HYPRLAND_TAG})|" >> $GITHUB_STEP_SUMMARY
+echo "|wayland/wayland-protocols|[${WAYLAND_PROTOCOLS_TAG}](https://gitlab.freedesktop.org/wayland/wayland-protocols/tree/${WAYLAND_PROTOCOLS_TAG})|" >> $GITHUB_STEP_SUMMARY
+echo "|wayland/wayland|[${WAYLAND_TAG}](https://gitlab.freedesktop.org/wayland/wayland/tree/${WAYLAND_TAG})|" >> $GITHUB_STEP_SUMMARY
+echo "|xorg/lib/libxcb-errors|[${XCB_ERRORS_TAG}](https://gitlab.freedesktop.org/xorg/lib/libxcb-errors/-/tree/${XCB_ERRORS_TAG}?ref_type=tags)|" >> $GITHUB_STEP_SUMMARY
 echo "" >> $GITHUB_STEP_SUMMARY
 
 # 70 libxcb-errors
