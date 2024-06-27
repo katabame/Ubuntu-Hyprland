@@ -53,8 +53,8 @@ curl https://hypr.kataba.me/build.sh | bash
 |Channel / Status|Description|Update Timing|
 |-----|-----|-----|
 |[![Stable build](https://github.com/katabame/Ubuntu-Hyprland/actions/workflows/stable.yaml/badge.svg)](https://github.com/katabame/Ubuntu-Hyprland/actions/workflows/stable.yaml)|Build with pre-defined tags for repositories.<br>Should build success everytime.|manually|
-|[![Canary build](https://github.com/katabame/Ubuntu-Hyprland/actions/workflows/canary.yaml/badge.svg)](https://github.com/katabame/Ubuntu-Hyprland/actions/workflows/canary.yaml)|Build with latest tags for repositories.<br>Possibly build success after new hyprwm/hyprland tag released.|daily|
-|[![Nightly build](https://github.com/katabame/Ubuntu-Hyprland/actions/workflows/nightly.yaml/badge.svg)](https://github.com/katabame/Ubuntu-Hyprland/actions/workflows/nightly.yaml)|Build with latest commits for repositories.<br>Mostly build fails.|daily|
+|[![Canary build](https://github.com/katabame/Ubuntu-Hyprland/actions/workflows/canary.yaml/badge.svg)](https://github.com/katabame/Ubuntu-Hyprland/actions/workflows/canary.yaml)|Build with latest tags for repositories.<br>For users who wanted up-to-date environment.|daily|
+|[![Nightly build](https://github.com/katabame/Ubuntu-Hyprland/actions/workflows/nightly.yaml/badge.svg)](https://github.com/katabame/Ubuntu-Hyprland/actions/workflows/nightly.yaml)|Build with latest commits for repositories.<br>Use at your own risk!|daily|
 
 # Contribute
 if you find any improvement or issue, please open [pullrequest](https://github.com/katabame/Ubuntu-Hyprland/pulls) or [issue](https://github.com/katabame/Ubuntu-Hyprland/issues)
