@@ -24,7 +24,7 @@ function apt_install() {
 
 ## 00 change working directory
 if [ -d ~/hyprsource ]; then
-    rm -rf ~/hyprsource
+    ensure_root rm -rf ~/hyprsource
 fi
 mkdir ~/hyprsource
 cd ~/hyprsource
@@ -55,46 +55,60 @@ echo "::endgroup::"
 case "$1" in
     nightly)
         echo "Build target: nightly"
-        WAYLAND_TAG='main'
-        WAYLAND_PROTOCOLS_TAG='main'
-        HYPRLANG_TAG='main'
         HYPRCURSOR_TAG='main'
         HYPRLAND_PROTOCOLS_TAG='main'
-        XDG_DESKTOP_PORTAL_HYPRLAND_TAG='master'
-        HYPRWAYLAND_SCANNER_TAG='main'
         HYPRLAND_TAG='main'
+        HYPRLANG_TAG='main'
         HYPRUTILS_TAG='main'
+        HYPRWAYLAND_SCANNER_TAG='main'
+        XDG_DESKTOP_PORTAL_HYPRLAND_TAG='master'
+        WAYLAND_PROTOCOLS_TAG='main'
+        WAYLAND_TAG='main'
         XCB_ERRORS_TAG='master'
     ;;
     canary)
         echo "Build target: canary"
-        WAYLAND_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/121/repository/tags | jq -r '.[0].name'`
-        WAYLAND_PROTOCOLS_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/2891/repository/tags | jq -r '.[0].name'`
-        HYPRLANG_TAG=`curl https://api.github.com/repos/hyprwm/hyprlang/releases/latest | jq -r '.tag_name'`
         HYPRCURSOR_TAG=`curl https://api.github.com/repos/hyprwm/hyprcursor/releases/latest | jq -r '.tag_name'`
-        #HYPRLAND_PROTOCOLS_TAG=`curl https://api.github.com/repos/hyprwm/hyprland-protocols/releases/latest | jq -r '.tag_name'`
-        HYPRLAND_PROTOCOLS_TAG='main'
-        XDG_DESKTOP_PORTAL_HYPRLAND_TAG=`curl https://api.github.com/repos/hyprwm/xdg-desktop-portal-hyprland/releases/latest | jq -r '.tag_name'`
-        HYPRWAYLAND_SCANNER_TAG=`curl https://api.github.com/repos/hyprwm/hyprwayland-scanner/releases/latest | jq -r '.tag_name'`
+        HYPRLAND_PROTOCOLS_TAG=`curl https://api.github.com/repos/hyprwm/hyprland-protocols/releases/latest | jq -r '.tag_name'`
         HYPRLAND_TAG=`curl https://api.github.com/repos/hyprwm/hyprland/releases/latest | jq -r '.tag_name'`
+        HYPRLANG_TAG=`curl https://api.github.com/repos/hyprwm/hyprlang/releases/latest | jq -r '.tag_name'`
         HYPRUTILS_TAG=`curl https://api.github.com/repos/hyprwm/hyprutils/releases/latest | jq -r '.tag_name'`
+        HYPRWAYLAND_SCANNER_TAG=`curl https://api.github.com/repos/hyprwm/hyprwayland-scanner/releases/latest | jq -r '.tag_name'`
+        XDG_DESKTOP_PORTAL_HYPRLAND_TAG=`curl https://api.github.com/repos/hyprwm/xdg-desktop-portal-hyprland/releases/latest | jq -r '.tag_name'`
+        WAYLAND_PROTOCOLS_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/2891/repository/tags | jq -r '.[0].name'`
+        WAYLAND_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/121/repository/tags | jq -r '.[0].name'`
         XCB_ERRORS_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/2433/repository/tags | jq -r '.[0].name'`
     ;;
     *)
         echo "Build target: stable"
         # Build successful versions as of 2024-06-14 02:00 AM GMT+9
-        WAYLAND_TAG='1.23.0'
-        WAYLAND_PROTOCOLS_TAG='1.36'
-        HYPRLANG_TAG='v0.5.2'
-        HYPRCURSOR_TAG='v0.1.9'
-        HYPRLAND_PROTOCOLS_TAG='main'
-        XDG_DESKTOP_PORTAL_HYPRLAND_TAG='v1.3.2'
-        HYPRWAYLAND_SCANNER_TAG='v0.3.10'
-        HYPRLAND_TAG='v0.41.1'
-        HYPRUTILS_TAG='v0.1.2'
-        XCB_ERRORS_TAG='xcb-util-errors-1.0.1'
+        HYPRCURSOR_TAG='v0.1.9'                  # https://github.com/hyprwm/hyprcursor/releases
+        HYPRLAND_PROTOCOLS_TAG='v0.3.0'          # https://github.com/hyprwm/hyprland-protocols/releases
+        HYPRLAND_TAG='v0.41.2'                   # https://github.com/hyprwm/Hyprland/releases
+        HYPRLANG_TAG='v0.5.2'                    # https://github.com/hyprwm/hyprlang/releases
+        HYPRUTILS_TAG='v0.1.5'                   # https://github.com/hyprwm/hyprutils/releases
+        HYPRWAYLAND_SCANNER_TAG='v0.3.10'        # https://github.com/hyprwm/hyprwayland-scanner/releases
+        XDG_DESKTOP_PORTAL_HYPRLAND_TAG='v1.3.2' # https://github.com/hyprwm/xdg-desktop-portal-hyprland/releases
+        WAYLAND_PROTOCOLS_TAG='1.36'             # https://gitlab.freedesktop.org/wayland/wayland-protocols/-/tags
+        WAYLAND_TAG='1.23.0'                     # https://gitlab.freedesktop.org/wayland/wayland/-/tags
+        XCB_ERRORS_TAG='xcb-util-errors-1.0.1'   # https://gitlab.freedesktop.org/xorg/lib/libxcb-errors/-/tags
     ;;
 esac
+echo "### 📦 Build details" >> $GITHUB_STEP_SUMMARY
+echo "|Repository|Tag / Branch (Commit)|" >> $GITHUB_STEP_SUMMARY
+echo "" >> $GITHUB_STEP_SUMMARY
+echo "|---------------|-----|" >> $GITHUB_STEP_SUMMARY
+echo "|hyprwm/hyprcursor|[${HYPRCURSOR_TAG}](https://github.com/hyprwm/hyprcursor/tree/${HYPRCURSOR_TAG})|" >> $GITHUB_STEP_SUMMARY
+echo "|hyprwm/hyprland-protocols|[${HYPRLAND_PROTOCOLS_TAG}]|(https://github.com/hyprwm/hyprland-protocols/tree/${HYPRLAND_PROTOCOLS_TAG})|"
+echo "|hyprwm/Hyprland|[${HYPRLAND_TAG}](https://github.com/hyprwm/Hyprland/tree/${HYPRLAND_TAG})|"
+echo "|hyprwm/hyprlang|[${HYPRLANG_TAG}](https://github.com/hyprwm/hyprlang/tree/${HYPRLANG_TAG})|"
+echo "|hyprwm/hyprutils|[${HYPRUTILS_TAG}](https://github.com/hyprwm/hyprutils/tree/${HYPRUTILS_TAG})|"
+echo "|hyprwm/hyprwayland-scanner|[${HYPRWAYLAND_SCANNER_TAG}](https://github.com/hyprwm/hyprwayland-scanner/tree/${HYPRWAYLAND_SCANNER_TAG})|"
+echo "|hyprwm/xdg-desktop-portal-hyprland|[${XDG_DESKTOP_PORTAL_HYPRLAND_TAG}](https://github.com/hyprwm/xdg-desktop-portal-hyprland/tree/${XDG_DESKTOP_PORTAL_HYPRLAND_TAG})|"
+echo "|wayland/wayland-protocols|[1.36](https://gitlab.freedesktop.org/wayland/wayland-protocols/tree/1.36)|"
+echo "|wayland/wayland|[${WAYLAND_TAG}](https://gitlab.freedesktop.org/wayland/wayland/tree/${WAYLAND_TAG})|"
+echo "|xorg/lib/libxcb-errors|[${XCB_ERRORS_TAG}](https://gitlab.freedesktop.org/xorg/lib/libxcb-errors/-/tree/${XCB_ERRORS_TAG}?ref_type=tags)|"
+echo "" >> $GITHUB_STEP_SUMMARY
 
 # 70 libxcb-errors
 echo "::group::Build libxcb-errors"
