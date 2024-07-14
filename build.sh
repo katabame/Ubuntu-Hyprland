@@ -31,8 +31,7 @@ cd ~/hyprsource
 
 
 ## 01 basic build tools
-echo "::group::"
-echo "Install basic dependencies"
+echo "::group::Install basic dependencies"
 ensure_root apt-get update
 apt_install \
     ca-certificates meson jq cmake-extras \
@@ -43,8 +42,7 @@ echo "::endgroup::"
 # cf. https://gist.github.com/Vertecedoc4545/6e54487f07a1888b656b656c0cdd9764
 # cf. https://gist.github.com/katabame/e368988c968278c83c19bd5f5b60f407
 # those should be sorted (which package required by what)
-echo "::group::"
-echo "Install additional dependencies"
+echo "::group::Install additional dependencies"
 apt_install \
     gettext gettext-base fontconfig libfontconfig-dev \
     libxkbcommon-x11-dev libxkbregistry-dev seatd libvulkan-dev \
@@ -70,8 +68,7 @@ case "$1" in
         XCB_ERRORS_TAG='master'
     ;;
     canary)
-        echo "::group::"
-        echo "Build target: canary"
+        echo "::group::Build target: canary"
         HYPRCURSOR_TAG=`curl https://api.github.com/repos/hyprwm/hyprcursor/releases/latest | jq -r '.tag_name'`
         HYPRLAND_PROTOCOLS_TAG=`curl https://api.github.com/repos/hyprwm/hyprland-protocols/releases/latest | jq -r '.tag_name'`
         HYPRLAND_TAG=`curl https://api.github.com/repos/hyprwm/hyprland/releases/latest | jq -r '.tag_name'`
@@ -84,8 +81,7 @@ case "$1" in
         XCB_ERRORS_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/2433/repository/tags | jq -r '.[0].name'`
     ;;
     *)
-        echo "::group::"
-        echo "Build target: stable"
+        echo "::group::Build target: stable"
         # Build successful versions as of 2024-06-28 02:00 AM GMT+9
         HYPRCURSOR_TAG='v0.1.9'                  # https://github.com/hyprwm/hyprcursor/releases
         HYPRLAND_PROTOCOLS_TAG='v0.3.0'          # https://github.com/hyprwm/hyprland-protocols/releases
@@ -117,7 +113,10 @@ echo "::endgroup::"
 # 70 libxcb-errors
 echo "::group::Build libxcb-errors"
 git clone --depth 1 --branch ${XCB_ERRORS_TAG} --recurse-submodules https://gitlab.freedesktop.org/xorg/lib/libxcb-errors.git
+#git clone --depth 1 --branch ${XCB_ERRORS_TAG} https://gitlab.freedesktop.org/xorg/lib/libxcb-errors.git
 cd ./libxcb-errors
+    #sed -i s/git:/https:/ .gitmodules
+    #git submodule update --init
     apt_install xutils-dev libtool xcb-proto
     ./autogen.sh
     ./configure
