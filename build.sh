@@ -54,8 +54,7 @@ echo "::endgroup::"
 # 03 determine repository tag
 case "$1" in
     nightly)
-        echo "::group::"
-        echo "Build target: nightly"
+        echo "::group::Build target: nightly"
         HYPRCURSOR_TAG='main'
         HYPRLAND_PROTOCOLS_TAG='main'
         HYPRLAND_TAG='main'
@@ -113,10 +112,7 @@ echo "::endgroup::"
 # 70 libxcb-errors
 echo "::group::Build libxcb-errors"
 git clone --depth 1 --branch ${XCB_ERRORS_TAG} --recurse-submodules https://gitlab.freedesktop.org/xorg/lib/libxcb-errors.git
-#git clone --depth 1 --branch ${XCB_ERRORS_TAG} https://gitlab.freedesktop.org/xorg/lib/libxcb-errors.git
 cd ./libxcb-errors
-    #sed -i s/git:/https:/ .gitmodules
-    #git submodule update --init
     apt_install xutils-dev libtool xcb-proto
     ./autogen.sh
     ./configure
