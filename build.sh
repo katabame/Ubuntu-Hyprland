@@ -111,7 +111,7 @@ echo "::endgroup::"
 
 # 70 libxcb-errors
 echo "::group::Build libxcb-errors"
-git clone --depth 1 --branch ${XCB_ERRORS_TAG} --recurse-submodules https://gitlab.freedesktop.org/xorg/lib/libxcb-errors.git
+git clone --depth 1 --branch master --recurse-submodules https://github.com/katabame/libxcb-errors.git
 cd ./libxcb-errors
     apt_install xutils-dev libtool xcb-proto
     ./autogen.sh
