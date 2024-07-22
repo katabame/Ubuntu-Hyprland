@@ -88,7 +88,7 @@ case "$1" in
         HYPRLANG_TAG='v0.5.2'                    # https://github.com/hyprwm/hyprlang/releases
         HYPRUTILS_TAG='v0.1.5'                   # https://github.com/hyprwm/hyprutils/releases
         HYPRWAYLAND_SCANNER_TAG='v0.3.10'        # https://github.com/hyprwm/hyprwayland-scanner/releases
-        XDG_DESKTOP_PORTAL_HYPRLAND_TAG='v1.3.2' # https://github.com/hyprwm/xdg-desktop-portal-hyprland/releases
+        XDG_DESKTOP_PORTAL_HYPRLAND_TAG='v1.3.3' # https://github.com/hyprwm/xdg-desktop-portal-hyprland/releases
         WAYLAND_PROTOCOLS_TAG='1.36'             # https://gitlab.freedesktop.org/wayland/wayland-protocols/-/tags
         WAYLAND_TAG='1.23.0'                     # https://gitlab.freedesktop.org/wayland/wayland/-/tags
         XCB_ERRORS_TAG='xcb-util-errors-1.0.1'   # https://gitlab.freedesktop.org/xorg/lib/libxcb-errors/-/tags
