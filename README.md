@@ -2,6 +2,12 @@
 
 (hopefully) minimal script for build [hyprwm/hyprland](https://github.com/hyprwm/hyprland) on Ubuntu noble
 
+> [!IMPORTANT]
+> currently, `https://hypr.kataba.me/build.sh` serves `build.sh` of `minimal` branch due to `xdg-desktop-portal-hyprland`'s security issue.  
+> on `minimal`, `xdg-desktop-portal-hyprland` build will be skipped.
+
+
+
 ## Usage
 ```bash
 # using wget
