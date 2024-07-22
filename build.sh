@@ -120,6 +120,18 @@ cd ./libxcb-errors
 cd ~/hyprsource
 echo "::endgroup::"
 
+# 71 pipewire
+echo "::group::Build pipewire"
+git clone --depth 1 --branch 1.2.1 https://github.com/PipeWire/pipewire.git
+cd ./pipewire
+    mkdir ./build && cd ./build
+    apt_install libdbus-1-dev
+    meson setup --prefix=/usr --buildtype=release
+    ninja
+    ensure_root ninja install
+cd ~/hyprsource
+echo "::endgroup::"
+
 # 90 hyprutils
 echo "::group::Build hyprutils"
 git clone --depth 1 --branch ${HYPRUTILS_TAG} https://github.com/hyprwm/hyprutils.git
