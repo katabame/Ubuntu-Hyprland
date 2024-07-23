@@ -131,6 +131,7 @@ cd ./pipewire
     apt_install libdbus-1-dev libglib2.0-dev
     ./autogen.sh
     make all
+    ensure_root make install
     #meson setup --prefix=/usr --buildtype=release
     #ninja
     #ensure_root ninja install
