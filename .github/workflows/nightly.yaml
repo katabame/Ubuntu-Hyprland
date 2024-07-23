@@ -2,13 +2,13 @@ name: Nightly Build
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 15 * * *'
   workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - build.sh
+      - noble.sh
       - .github/workflows/nightly.yaml
 
 jobs:
@@ -22,8 +22,8 @@ jobs:
 
     - name: Run build script
       run: |
-        chmod +x ./build.sh
-        ./build.sh nightly
+        chmod +x ./noble.sh
+        ./noble.sh nightly
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4

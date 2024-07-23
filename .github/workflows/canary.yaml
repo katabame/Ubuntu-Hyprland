@@ -2,13 +2,13 @@ name: Canary Build
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 15 * * *'
   workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - build.sh
+      - noble.sh
       - .github/workflows/canary.yaml
 
 jobs:
