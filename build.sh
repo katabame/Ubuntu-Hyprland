@@ -109,7 +109,7 @@ echo "|wayland/wayland|[${WAYLAND_TAG}](https://gitlab.freedesktop.org/wayland/w
 echo "|xorg/lib/libxcb-errors|[${XCB_ERRORS_TAG}](https://gitlab.freedesktop.org/xorg/lib/libxcb-errors/-/tree/${XCB_ERRORS_TAG}?ref_type=tags)|" # >> $GITHUB_STEP_SUMMARY
 echo "::endgroup::"
 
-ensure_root add-apt-repository -y ppa:pipewire-debian/pipewire-upstream
+#ensure_root add-apt-repository -y ppa:pipewire-debian/pipewire-upstream
 
 
 # 70 libxcb-errors
@@ -128,11 +128,13 @@ echo "::group::Build pipewire"
 git clone --depth 1 --branch '1.2.1' https://gitlab.freedesktop.org/pipewire/pipewire.git
 cd ./pipewire
     mkdir ./build && cd ./build
-    apt_install libdbus-1-dev
-    meson setup --prefix=/usr --buildtype=release
-    ninja
-    ensure_root ninja install
-    ensure_root ldconfig
+    apt_install libdbus-1-dev libglib2.0-dev
+    ./autogen.sh
+    make all
+    #meson setup --prefix=/usr --buildtype=release
+    #ninja
+    #ensure_root ninja install
+    #ensure_root ldconfig
     pipewire --version
 cd ~/hyprsource
 echo "::endgroup::"
