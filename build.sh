@@ -127,7 +127,7 @@ echo "::endgroup::"
 echo "::group::Build pipewire"
 git clone --depth 1 --branch '1.2.1' https://gitlab.freedesktop.org/pipewire/pipewire.git
 cd ./pipewire
-    mkdir ./build && cd ./build
+    #mkdir ./build && cd ./build
     apt_install libdbus-1-dev libglib2.0-dev
     ./autogen.sh
     make all
