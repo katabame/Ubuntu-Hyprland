@@ -109,6 +109,23 @@ cd ./libxcb-errors
 cd ~/hyprsource
 echo "::endgroup::"
 
+# 71 pipewire
+echo "::group::Build pipewire"
+git clone --depth 1 --branch 1.2.1 https://gitlab.freedesktop.org/pipewire/pipewire.git
+cd ./pipewire
+    apt_install debhelper-compat findutils git \
+        libapparmor-dev libasound2-dev libavcodec-dev libavfilter-dev \
+        libavformat-dev libdbus-1-dev libbluetooth-dev libglib2.0-dev \
+        libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libsbc-dev \
+        libsdl2-dev libsnapd-glib-dev libudev-dev libva-dev libv4l-dev \
+        libx11-dev meson ninja-build pkg-config python3-docutils systemd
+    mkdir ./build && cd ./build
+    meson setup --prefix=/usr --buildtype=release
+    ninja
+    ensure_root ninja install
+cd ~/hyprsource
+echo "::endgroup::"
+
 # 90 hyprutils
 echo "::group::Build hyprutils"
 git clone --depth 1 --branch ${HYPRUTILS_TAG} https://github.com/hyprwm/hyprutils.git
@@ -170,6 +187,17 @@ cd ./hyprland-protocols
     mkdir ./build && cd ./build
     meson setup --prefix=/usr --buildtype=release
     ensure_root ninja install
+cd ~/hyprsource
+echo "::endgroup::"
+
+# 96 xdg-desktop-portal-hyprland
+echo "::group::Build xdg-desktop-portal-hyprland"
+git clone --depth 1 --branch ${XDG_DESKTOP_PORTAL_HYPRLAND_TAG} --recurse-submodules https://github.com/hyprwm/xdg-desktop-portal-hyprland.git
+cd ./xdg-desktop-portal-hyprland
+    apt_install libsdbus-c++-dev qt6-base-dev libdrm-dev libgbm-dev qt6-tools-dev
+    cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_LIBEXECDIR:PATH=/usr/lib -S . -B ./build
+    cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
+    ensure_root cmake --install ./build
 cd ~/hyprsource
 echo "::endgroup::"
 
