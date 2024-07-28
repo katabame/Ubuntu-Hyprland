@@ -112,16 +112,6 @@ cd ./libxcb-errors
 cd ~/hyprsource
 echo "::endgroup::"
 
-# 71 aquamarine
-echo "::group::Build aquamarine"
-git clone --depth 1 --branch ${AQUAMARINE_TAG} https://github.com/hyprwm/aquamarine.git
-cd ./aquamarine
-    cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
-    cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
-    ensure_root cmake --install ./build
-cd ~/hyprsource
-echo "::endgroup::"
-
 # 90 hyprutils
 echo "::group::Build hyprutils"
 git clone --depth 1 --branch ${HYPRUTILS_TAG} https://github.com/hyprwm/hyprutils.git
@@ -202,6 +192,16 @@ echo "::group::Build hyprwayland-scanner"
 git clone --depth 1 --branch ${HYPRWAYLAND_SCANNER_TAG} https://github.com/hyprwm/hyprwayland-scanner.git
 cd ./hyprwayland-scanner
     apt_install libpugixml-dev
+    cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+    cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
+    ensure_root cmake --install ./build
+cd ~/hyprsource
+echo "::endgroup::"
+
+# 98 aquamarine
+echo "::group::Build aquamarine"
+git clone --depth 1 --branch ${AQUAMARINE_TAG} https://github.com/hyprwm/aquamarine.git
+cd ./aquamarine
     cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
     cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
     ensure_root cmake --install ./build
