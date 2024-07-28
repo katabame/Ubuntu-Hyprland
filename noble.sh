@@ -65,8 +65,6 @@ case "$1" in
         WAYLAND_PROTOCOLS_TAG='main'
         WAYLAND_TAG='main'
         XCB_ERRORS_TAG='master'
-        PIPEWIRE_TAG='master'
-        AQUAMARINE_TAG='main'
     ;;
     *)
         echo "::group::Build target: canary"
@@ -81,7 +79,6 @@ case "$1" in
         WAYLAND_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/121/repository/tags | jq -r '.[0].name'`
         XCB_ERRORS_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/2433/repository/tags | jq -r '.[0].name'`
         PIPEWIRE_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/4753/repository/tags | jq -r '.[0].name'`
-        AQUAMARINE_TAG=`curl https://api.github.com/repos/hyprwm/aquamarine/releases/latest | jq -r '.tag_name'`
     ;;
 esac
 echo "### 📦 Build details" # >> $GITHUB_STEP_SUMMARY
@@ -98,7 +95,6 @@ echo "|wayland/wayland-protocols|[${WAYLAND_PROTOCOLS_TAG}](https://gitlab.freed
 echo "|wayland/wayland|[${WAYLAND_TAG}](https://gitlab.freedesktop.org/wayland/wayland/tree/${WAYLAND_TAG})|" # >> $GITHUB_STEP_SUMMARY
 echo "|xorg/lib/libxcb-errors|[${XCB_ERRORS_TAG}](https://gitlab.freedesktop.org/xorg/lib/libxcb-errors/-/tree/${XCB_ERRORS_TAG}?ref_type=tags)|" # >> $GITHUB_STEP_SUMMARY
 echo "|Pipewire/pipewire|[${PIPEWIRE_TAG}](https://gitlab.freedesktop.org/pipewire/pipewire/-/tree/${PIPEWIRE_TAG}?ref_type=tags)|" # >> $GITHUB_STEP_SUMMARY
-echo "|hyprwm/aquamarine|[${AQUAMARINE_TAG}](https://github.com/hyprwm/aquamarine/tree/${AQUAMARINE_TAG})|" # >> $GITHUB_STEP_SUMMARY
 echo "::endgroup::"
 
 # 70 libxcb-errors
@@ -212,17 +208,6 @@ echo "::group::Build hyprwayland-scanner"
 git clone --depth 1 --branch ${HYPRWAYLAND_SCANNER_TAG} https://github.com/hyprwm/hyprwayland-scanner.git
 cd ./hyprwayland-scanner
     apt_install libpugixml-dev
-    cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
-    cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
-    ensure_root cmake --install ./build
-cd ~/hyprsource
-echo "::endgroup::"
-
-# 98 aquamarine
-echo "::group::Build aquamarine"
-git clone --depth 1 --branch ${AQUAMARINE_TAG} https://github.com/hyprwm/aquamarine.git
-cd ./aquamarine
-    apt_install libseat-dev libinput-dev libdisplay-info-dev
     cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
     cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
     ensure_root cmake --install ./build
