@@ -136,16 +136,16 @@ cd ~/hyprsource
 echo "::endgroup::"
 
 # 72 libinput
-echo "::group::Build libinput"
-git clone --depth 1 --branch ${LIBINPUT_TAG} https://gitlab.freedesktop.org/libinput/libinput
-cd ./libinput
-    apt_install libgtk-3-dev check libmtdev-dev libevdev-dev libwacom-dev
-    mkdir ./build && cd ./build
-    meson setup --prefix=/usr --buildtype=release
-    ninja
-    ensure_root ninja install
-cd ~/hyprsource
-echo "::endgroup::"
+#echo "::group::Build libinput"
+#git clone --depth 1 --branch ${LIBINPUT_TAG} https://gitlab.freedesktop.org/libinput/libinput
+#cd ./libinput
+#    apt_install libgtk-3-dev check libmtdev-dev libevdev-dev libwacom-dev
+#    mkdir ./build && cd ./build
+#    meson setup --prefix=/usr --buildtype=release
+#    ninja
+#    ensure_root ninja install
+#cd ~/hyprsource
+#echo "::endgroup::"
 
 # 90 hyprutils
 echo "::group::Build hyprutils"
@@ -234,15 +234,15 @@ cd ~/hyprsource
 echo "::endgroup::"
 
 # 98 aquamarine
-echo "::group::Build aquamarine"
-git clone --depth 1 --branch ${AQUAMARINE_TAG} https://github.com/hyprwm/aquamarine.git
-cd ./aquamarine
-    apt_install libseat-dev libdisplay-info-dev hwdata
-    cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
-    cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
-    ensure_root cmake --install ./build
-cd ~/hyprsource
-echo "::endgroup::"
+#echo "::group::Build aquamarine"
+#git clone --depth 1 --branch ${AQUAMARINE_TAG} https://github.com/hyprwm/aquamarine.git
+#cd ./aquamarine
+#    apt_install libseat-dev libdisplay-info-dev hwdata
+#    cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+#    cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
+#    ensure_root cmake --install ./build
+#cd ~/hyprsource
+#echo "::endgroup::"
 
 # 99 Hyprland
 echo "::group::Build hyprland"
