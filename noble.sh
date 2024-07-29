@@ -65,6 +65,7 @@ case "$1" in
         WAYLAND_PROTOCOLS_TAG='main'
         WAYLAND_TAG='main'
         XCB_ERRORS_TAG='master'
+        PIPEWIRE_TAG='master'
         AQUAMARINE_TAG='main'
         LIBINPUT_TAG='main'
     ;;
