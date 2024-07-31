@@ -3,8 +3,8 @@ set -e
 
 ## -- TRAP!!
 codename=$(grep ^UBUNTU_CODENAME /etc/os-release | cut -d '=' -f2)
-if [ "${codename}" != 'noble' ]; then
-    echo 'Please upgrade your Ubuntu version to noble first!'
+if [ "${codename}" != 'oracular' ]; then
+    echo 'Please upgrade your Ubuntu version to oracular first!'
     exit 1
 fi
 
@@ -47,7 +47,7 @@ apt_install \
     gettext gettext-base fontconfig libfontconfig-dev \
     libxkbcommon-x11-dev libxkbregistry-dev seatd libvulkan-dev \
     libvulkan-volk-dev libvkfft-dev libgulkan-dev libegl1-mesa-dev \
-    glslang-tools libavutil-dev libavcodec-dev \
+    glslang-tools libinput-bin libavutil-dev libavcodec-dev \
     libavformat-dev vulkan-utility-libraries-dev
 echo "::endgroup::"
 
@@ -65,9 +65,7 @@ case "$1" in
         WAYLAND_PROTOCOLS_TAG='main'
         WAYLAND_TAG='main'
         XCB_ERRORS_TAG='master'
-        PIPEWIRE_TAG='master'
         AQUAMARINE_TAG='main'
-        LIBINPUT_TAG='main'
     ;;
     *)
         echo "::group::Build target: canary"
@@ -81,9 +79,7 @@ case "$1" in
         WAYLAND_PROTOCOLS_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/2891/repository/tags | jq -r '.[0].name'`
         WAYLAND_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/121/repository/tags | jq -r '.[0].name'`
         XCB_ERRORS_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/2433/repository/tags | jq -r '.[0].name'`
-        PIPEWIRE_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/4753/repository/tags | jq -r '.[0].name'`
         AQUAMARINE_TAG=`curl https://api.github.com/repos/hyprwm/aquamarine/releases/latest | jq -r '.tag_name'`
-        LIBINPUT_TAG=`curl https://gitlab.freedesktop.org/api/v4/projects/147/repository/tags | jq -r '.[0].name'`
     ;;
 esac
 echo "### 📦 Build details" # >> $GITHUB_STEP_SUMMARY
@@ -99,53 +95,22 @@ echo "|hyprwm/xdg-desktop-portal-hyprland|[${XDG_DESKTOP_PORTAL_HYPRLAND_TAG}](h
 echo "|wayland/wayland-protocols|[${WAYLAND_PROTOCOLS_TAG}](https://gitlab.freedesktop.org/wayland/wayland-protocols/tree/${WAYLAND_PROTOCOLS_TAG})|" # >> $GITHUB_STEP_SUMMARY
 echo "|wayland/wayland|[${WAYLAND_TAG}](https://gitlab.freedesktop.org/wayland/wayland/tree/${WAYLAND_TAG})|" # >> $GITHUB_STEP_SUMMARY
 echo "|xorg/lib/libxcb-errors|[${XCB_ERRORS_TAG}](https://gitlab.freedesktop.org/xorg/lib/libxcb-errors/-/tree/${XCB_ERRORS_TAG}?ref_type=tags)|" # >> $GITHUB_STEP_SUMMARY
-echo "|Pipewire/pipewire|[${PIPEWIRE_TAG}](https://gitlab.freedesktop.org/pipewire/pipewire/-/tree/${PIPEWIRE_TAG}?ref_type=tags)|" # >> $GITHUB_STEP_SUMMARY
 echo "|hyprwm/aquamarine|[${AQUAMARINE_TAG}](https://github.com/hyprwm/aquamarine/tree/${AQUAMARINE_TAG})|" # >> $GITHUB_STEP_SUMMARY
-echo "|libinput/libinput|[${LIBINPUT_TAG}](https://gitlab.freedesktop.org/libinput/libinput/-/tree/${LIBINPUT_TAG}?ref_type=tags)|" # >> $GITHUB_STEP_SUMMARY
 echo "::endgroup::"
 
 # 70 libxcb-errors
-echo "::group::Build libxcb-errors"
-git clone --depth 1 --branch ${XCB_ERRORS_TAG} https://gitlab.freedesktop.org/xorg/lib/libxcb-errors.git
-cd ./libxcb-errors
-    sed -e '$d' .gitmodules
-    echo "	url = https://gitlab.freedesktop.org/xorg/util/xcb-util-m4.git" >> .gitmodules
-    git submodule update --init --recursive
-    apt_install xutils-dev libtool xcb-proto
-    ./autogen.sh
-    ./configure
-    ensure_root make install
-cd ~/hyprsource
-echo "::endgroup::"
-
-# 71 pipewire
-echo "::group::Build pipewire"
-git clone --depth 1 --branch ${PIPEWIRE_TAG} https://gitlab.freedesktop.org/pipewire/pipewire.git
-cd ./pipewire
-    apt_install debhelper-compat findutils git \
-        libapparmor-dev libasound2-dev libavcodec-dev libavfilter-dev \
-        libavformat-dev libdbus-1-dev libbluetooth-dev libglib2.0-dev \
-        libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libsbc-dev \
-        libsdl2-dev libsnapd-glib-dev libudev-dev libva-dev libv4l-dev \
-        libx11-dev meson ninja-build pkg-config python3-docutils systemd
-    mkdir ./build && cd ./build
-    meson setup --prefix=/usr --buildtype=release
-    ninja
-    ensure_root ninja install
-cd ~/hyprsource
-echo "::endgroup::"
-
-# 72 libinput
-echo "::group::Build libinput"
-git clone --depth 1 --branch ${LIBINPUT_TAG} https://gitlab.freedesktop.org/libinput/libinput
-cd ./libinput
-    apt_install libgtk-3-dev check libmtdev-dev libevdev-dev libwacom-dev
-    mkdir ./build && cd ./build
-    meson setup --prefix=/usr --buildtype=release
-    ninja
-    ensure_root ninja install
-cd ~/hyprsource
-echo "::endgroup::"
+#echo "::group::Build libxcb-errors"
+#git clone --depth 1 --branch ${XCB_ERRORS_TAG} https://gitlab.freedesktop.org/xorg/lib/libxcb-errors.git
+#cd ./libxcb-errors
+#    sed -e '$d' .gitmodules
+#    echo "	url = https://gitlab.freedesktop.org/xorg/util/xcb-util-m4.git" >> .gitmodules
+#    git submodule update --init --recursive
+#    apt_install xutils-dev libtool xcb-proto
+#    ./autogen.sh
+#    ./configure
+#    ensure_root make install
+#cd ~/hyprsource
+#echo "::endgroup::"
 
 # 90 hyprutils
 echo "::group::Build hyprutils"
@@ -179,27 +144,27 @@ cd ~/hyprsource
 echo "::endgroup::"
 
 # 93 wayland
-echo "::group::Build wayland"
-git clone --depth 1 --branch ${WAYLAND_TAG} https://gitlab.freedesktop.org/wayland/wayland.git
-cd ./wayland
-    apt_install libxml2-dev
-    mkdir ./build && cd ./build
-    meson setup --prefix=/usr --buildtype=release -Ddocumentation=false
-    ninja
-    ensure_root ninja install
-cd ~/hyprsource
-echo "::endgroup::"
+#echo "::group::Build wayland"
+#git clone --depth 1 --branch ${WAYLAND_TAG} https://gitlab.freedesktop.org/wayland/wayland.git
+#cd ./wayland
+#    apt_install libxml2-dev
+#    mkdir ./build && cd ./build
+#    meson setup --prefix=/usr --buildtype=release -Ddocumentation=false
+#    ninja
+#    ensure_root ninja install
+#cd ~/hyprsource
+#echo "::endgroup::"
 
 # 94 wayland-protocols
-echo "::group::Build wayland-protocols"
-git clone --depth 1 --branch ${WAYLAND_PROTOCOLS_TAG} https://gitlab.freedesktop.org/wayland/wayland-protocols.git
-cd ./wayland-protocols
-    mkdir ./build && cd ./build
-    meson setup --prefix=/usr --buildtype=release
-    ninja
-    ensure_root ninja install
-cd ~/hyprsource
-echo "::endgroup::"
+#echo "::group::Build wayland-protocols"
+#git clone --depth 1 --branch ${WAYLAND_PROTOCOLS_TAG} https://gitlab.freedesktop.org/wayland/wayland-protocols.git
+#cd ./wayland-protocols
+#    mkdir ./build && cd ./build
+#    meson setup --prefix=/usr --buildtype=release
+#    ninja
+#    ensure_root ninja install
+#cd ~/hyprsource
+#echo "::endgroup::"
 
 # 95 hyprland-protocols
 echo "::group::Build hyprland-protocols"
@@ -215,7 +180,7 @@ echo "::endgroup::"
 echo "::group::Build xdg-desktop-portal-hyprland"
 git clone --depth 1 --branch ${XDG_DESKTOP_PORTAL_HYPRLAND_TAG} --recurse-submodules https://github.com/hyprwm/xdg-desktop-portal-hyprland.git
 cd ./xdg-desktop-portal-hyprland
-    apt_install libsdbus-c++-dev qt6-base-dev libdrm-dev libgbm-dev qt6-tools-dev
+    apt_install libpipewire-0.3-dev libsdbus-c++-dev qt6-base-dev libdrm-dev libgbm-dev qt6-tools-dev
     cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_LIBEXECDIR:PATH=/usr/lib -S . -B ./build
     cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
     ensure_root cmake --install ./build
@@ -237,7 +202,7 @@ echo "::endgroup::"
 echo "::group::Build aquamarine"
 git clone --depth 1 --branch ${AQUAMARINE_TAG} https://github.com/hyprwm/aquamarine.git
 cd ./aquamarine
-    apt_install libseat-dev libdisplay-info-dev hwdata
+    apt_install libseat-dev libinput-dev libdisplay-info-dev hwdata
     cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
     cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
     ensure_root cmake --install ./build
@@ -253,7 +218,7 @@ cd ./hyprland
         libwayland-dev libdrm-dev libxkbcommon-dev \
         libpixman-1-dev libegl-dev libgbm-dev libgles-dev \
         libudev-dev libseat-dev hwdata libdisplay-info-dev \
-        libliftoff-dev libxcb-dri3-dev libxcb-present-dev \
+        libliftoff-dev libinput-dev libxcb-dri3-dev libxcb-present-dev \
         xwayland libxcb-render-util0-dev libxcb-composite0-dev \
         libxcb-shm0-dev libxcb-ewmh-dev libxcb-xinput-dev libxcb-icccm4-dev \
         libxcb-res0-dev libcairo2-dev libpango1.0-dev
