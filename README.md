@@ -9,20 +9,32 @@
 
 ## Usage on Ubuntu oracular (recommended)
 ```bash
+## Canary
 # using wget
 wget -O - https://hypr.kataba.me/oracular.sh | bash
-
 # using curl
 curl https://hypr.kataba.me/oracular.sh | bash
+
+## Nightly
+# using wget
+wget -O - https://hypr.kataba.me/oracular.sh | bash -s -- nightly 
+# using curl
+curl https://hypr.kataba.me/oracular.sh | bash -s -- nightly
 ```
 
 ## Usage on Ubuntu noble (will be discontinued)
 ```bash
+## Canary
 # using wget
 wget -O - https://hypr.kataba.me/noble.sh | bash
-
 # using curl
 curl https://hypr.kataba.me/noble.sh | bash
+
+## Nightly
+# using wget
+wget -O - https://hypr.kataba.me/noble.sh | bash -s -- nightly
+# using curl
+curl https://hypr.kataba.me/noble.sh | bash -s -- nightly
 ```
 
 
