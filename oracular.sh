@@ -221,7 +221,7 @@ cd ./hyprland
         libliftoff-dev libinput-dev libxcb-dri3-dev libxcb-present-dev \
         xwayland libxcb-render-util0-dev libxcb-composite0-dev \
         libxcb-shm0-dev libxcb-ewmh-dev libxcb-xinput-dev libxcb-icccm4-dev \
-        libxcb-res0-dev libcairo2-dev libpango1.0-dev
+        libxcb-res0-dev libcairo2-dev libpango1.0-dev libxcursor-dev
     mkdir ./build && cd ./build
     meson setup --prefix=/usr --buildtype=release
     ninja
