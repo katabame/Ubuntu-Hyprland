@@ -176,23 +176,23 @@ cd ./hyprland-protocols
 cd ~/hyprsource
 echo "::endgroup::"
 
-# 96 xdg-desktop-portal-hyprland
-echo "::group::Build xdg-desktop-portal-hyprland"
-git clone --depth 1 --branch ${XDG_DESKTOP_PORTAL_HYPRLAND_TAG} --recurse-submodules https://github.com/hyprwm/xdg-desktop-portal-hyprland.git
-cd ./xdg-desktop-portal-hyprland
-    apt_install libpipewire-0.3-dev libsdbus-c++-dev qt6-base-dev libdrm-dev libgbm-dev qt6-tools-dev
-    cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_LIBEXECDIR:PATH=/usr/lib -S . -B ./build
-    cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
-    ensure_root cmake --install ./build
-cd ~/hyprsource
-echo "::endgroup::"
-
-# 97 hyprwayland-scanner
+# 96 hyprwayland-scanner
 echo "::group::Build hyprwayland-scanner"
 git clone --depth 1 --branch ${HYPRWAYLAND_SCANNER_TAG} https://github.com/hyprwm/hyprwayland-scanner.git
 cd ./hyprwayland-scanner
     apt_install libpugixml-dev
     cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+    cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
+    ensure_root cmake --install ./build
+cd ~/hyprsource
+echo "::endgroup::"
+
+# 97 xdg-desktop-portal-hyprland
+echo "::group::Build xdg-desktop-portal-hyprland"
+git clone --depth 1 --branch ${XDG_DESKTOP_PORTAL_HYPRLAND_TAG} --recurse-submodules https://github.com/hyprwm/xdg-desktop-portal-hyprland.git
+cd ./xdg-desktop-portal-hyprland
+    apt_install libpipewire-0.3-dev libsdbus-c++-dev qt6-base-dev libdrm-dev libgbm-dev qt6-tools-dev
+    cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_LIBEXECDIR:PATH=/usr/lib -S . -B ./build
     cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
     ensure_root cmake --install ./build
 cd ~/hyprsource
