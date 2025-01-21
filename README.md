@@ -2,12 +2,16 @@
 
 (hopefully) minimal script for build [hyprwm/hyprland](https://github.com/hyprwm/hyprland) on [Ubuntu oracular](https://cdimage.ubuntu.com/daily-live/current/)
 
+>[!NOTE]
+>`hyprland` is now can be installed via apt [[source]](https://wiki.hyprland.org/Getting-Started/Installation/)  
+>`sudo add-apt-repository universe && sudo apt-get update && sudo apt-get install -y hyprland`
+
 >[!IMPORTANT]
 >`hyprwm/Hyprland` v0.42.0 requires new dependency `hyprwm/aquamarine`,  
 >but some dependencies (including dependency to build `hyprwm/aquamarine`) at apt is old on noble.  
 >I hightly recommends use oracular instead!
 
-## Usage on Ubuntu oracular (recommended)
+## Usage on Ubuntu oracular
 ```bash
 ## Canary
 # using wget
