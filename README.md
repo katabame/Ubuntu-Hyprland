@@ -4,7 +4,8 @@
 
 >[!NOTE]
 >`hyprland` is now can be installed via apt [[source]](https://wiki.hyprland.org/Getting-Started/Installation/)  
->`sudo add-apt-repository universe && sudo apt-get update && sudo apt-get install -y hyprland`
+>`sudo add-apt-repository universe && sudo apt-get update && sudo apt-get install -y hyprland`  
+> Also there's ppa for latest hyprland build by cpiber https://github.com/cpiber/hyprland-ppa
 
 >[!IMPORTANT]
 >`hyprwm/Hyprland` v0.42.0 requires new dependency `hyprwm/aquamarine`,  
